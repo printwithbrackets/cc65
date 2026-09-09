@@ -117,8 +117,11 @@ void CL_MoveRefs (CodeLabel* OldLabel, CodeLabel* NewLabel)
 
         /* Change the reference to the new label */
         CHECK (E->JumpTo != NULL);
-        CHECK (E->JumpTo == OldLabel);
-        CL_AddRef (NewLabel, E);
+        if (E->JumpTo == OldLabel) {
+            CL_AddRef (NewLabel, E);
+        }
+        /* If E->JumpTo != OldLabel, the entry was already moved (e.g., duplicate
+        ** references in OldLabel->JumpFrom). Skip it. */
 
     }
 
