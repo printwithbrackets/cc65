@@ -115,10 +115,16 @@ void CL_MoveRefs (CodeLabel* OldLabel, CodeLabel* NewLabel)
         /* Get the instruction that references the old label */
         CodeEntry* E = CL_GetRef (OldLabel, Count);
 
-        /* Change the reference to the new label */
-        CHECK (E->JumpTo != NULL);
-        CHECK (E->JumpTo == OldLabel);
-        CL_AddRef (NewLabel, E);
+        if (E->JumpTo == OldLabel) {
+            CL_AddRef (NewLabel, E);
+        } else {
+            /* JumpTo == NULL: data-segment ref, not a tracked jump */
+            CHECK (E->JumpTo == NULL);
+            if (CE_HasArgBase (E)) {
+                CE_HasArgBase (E);
+            }
+            CollAppend (&NewLabel->JumpFrom, E);
+        }
 
     }
 
