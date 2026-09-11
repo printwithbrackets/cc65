@@ -863,9 +863,10 @@ unsigned OptJumpTarget3 (CodeSeg* S)
                     ** the #1211 workaround in PickRefLab). Such an entry
                     ** isn't a branch we can redirect, so skip it.
                     */
-                    if (Jump->JumpTo != L) {
+                    if (Jump->JumpTo == 0) {
                         continue;
                     }
+                    CHCK (Jump->JumpTo == L);
 
                     /* Get the register info from this insn */
                     short Val = RegVal (E->Chg, &Jump->RI->Out2);

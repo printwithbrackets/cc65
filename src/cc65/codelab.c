@@ -120,8 +120,11 @@ void CL_MoveRefs (CodeLabel* OldLabel, CodeLabel* NewLabel)
         } else {
             /* JumpTo == NULL: data-segment ref, not a tracked jump */
             CHECK (E->JumpTo == NULL);
+            CHECK (E->ArgOff ==0);
             if (CE_HasArgBase (E)) {
-                CE_HasArgBase (E);
+                CE_SetArgBase (E, NewLabel->Name);
+            } else {
+                CE_SetArgBaseAndOff (E, NewLabel->Name, 0);
             }
             CollAppend (&NewLabel->JumpFrom, E);
         }
