@@ -866,7 +866,7 @@ unsigned OptJumpTarget3 (CodeSeg* S)
                     if (Jump->JumpTo == 0) {
                         continue;
                     }
-                    CHCK (Jump->JumpTo == L);
+                    CHECK (Jump->JumpTo == L);
 
                     /* Get the register info from this insn */
                     short Val = RegVal (E->Chg, &Jump->RI->Out2);
