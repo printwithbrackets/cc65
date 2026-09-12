@@ -1554,20 +1554,13 @@ void CS_GenRegInfo (CodeSeg* S)
                 if (WasJump) {
                     /* Preceeding insn was an unconditional branch */
                     CodeEntry* J = CL_GetRef(Label, 0);
-                    /* This entry may be a data-segment-only reference to L
-                    ** rather than a real tracked jump (JumpTo == NULL, see
-                    ** the #1211 workaround in PickRefLab). Such an entry
-                    ** isn't a branch we can use for register info, so skip it.
-                    */
-                    if (J->JumpTo == 0) {
-                        Entry = 1;
-                    } else if (J->RI) {
+                    if (J->RI) {
                         Regs = J->RI->Out2;
                     } else {
                         RC_Invalidate (&Regs);
                         RC_InvalidatePS (&Regs);
-                        Entry = 1;
                     }
+                    Entry = 1;
                 } else {
                     Regs = *CurrentRegs;
                     Entry = 0;
@@ -1576,15 +1569,6 @@ void CS_GenRegInfo (CodeSeg* S)
                 while (Entry < CL_GetRefCount (Label)) {
                     /* Get this entry */
                     CodeEntry* J = CL_GetRef (Label, Entry);
-                    /* This entry may be a data-segment-only reference to L
-                    ** rather than a real tracked jump (JumpTo == NULL, see
-                    ** the #1211 workaround in PickRefLab). Such an entry
-                    ** isn't a branch we can use for register info, so skip it.
-                    */
-                    if (J->JumpTo == 0) {
-                        ++Entry;
-                        continue;
-                    }
                     if (J->RI == 0) {
                         /* No register info for this entry. This means that the
                         ** instruction that jumps here is at higher addresses and
