@@ -137,6 +137,23 @@ void CL_MoveRefs (CodeLabel* OldLabel, CodeLabel* NewLabel)
 
 
 
+int CL_HasUntrackedRef (const CodeLabel* L)
+/* Check if L has at least one untracked reference, that is, an entry in its
+** JumpFrom list whose JumpTo does not point back to L. See codelab.h for
+** why this matters.
+*/
+{
+    unsigned Count = CL_GetRefCount (L);
+    while (Count--) {
+        if (CL_GetRef ((CodeLabel*) L, Count)->JumpTo != L) {
+            return 1;
+        }
+    }
+    return 0;
+}
+
+
+
 void CL_Output (const CodeLabel* L)
 /* Output the code label to the output file */
 {
