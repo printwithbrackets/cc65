@@ -101,16 +101,6 @@ $(WORKDIR)/pptest2.$1.$2.prg: pptest2.c | $(WORKDIR)
 	$(if $(QUIET),echo misc/pptest2.$1.$2.prg)
 	$(NOT) $(CC65) -t sim$2 -$1 -o $$@ $$< $(NULLOUT) $(CATERR)
 
-# cc65 now compiles this without an ICE, but the computed-goto jump table
-# (built via the data segment/literal pool) still isn't repointed when a
-# label is merged, so linking fails with an unresolved external. See #1211.
-$(WORKDIR)/bug1211-ice-move-refs-2.$1.$2.prg: bug1211-ice-move-refs-2.c | $(WORKDIR)
-	@echo "FIXME: " $$@ "currently does not compile."
-	$(if $(QUIET),echo misc/bug1211-ice-move-refs-2.$1.$2.prg)
-	$(CC65) -t sim$2 -$1 -o $$(@:.prg=.s) $$< $(NULLOUT) $(CATERR)
-	$(CA65) -t sim$2 -o $$(@:.prg=.o) $$(@:.prg=.s) $(NULLERR)
-	$(NOT) $(LD65) -t sim$2 -o $$@ $$(@:.prg=.o) sim$2.lib $(NULLERR)
-
 # this one requires --std=c89, it fails with --std=c99
 $(WORKDIR)/bug1265.$1.$2.prg: bug1265.c | $(WORKDIR)
 	$(if $(QUIET),echo misc/bug1265.$1.$2.prg)
