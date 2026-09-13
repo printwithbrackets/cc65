@@ -1055,6 +1055,20 @@ void CS_MoveLabels (CodeSeg* S, struct CodeEntry* Old, struct CodeEntry* New)
             /* Get the next label */
             CodeLabel* OldLabel = CE_GetLabel (Old, OldLabelCount);
 
+            /* A label with an untracked reference is named directly from
+            ** somewhere outside the tracked reference system, for example
+            ** a computed goto jump table in the data segment (see
+            ** CL_HasUntrackedRef). It must keep its own identity rather
+            ** than being merged into NewLabel and deleted, since that
+            ** external text has no way of being updated. Move the label
+            ** itself onto New instead, the same way we would if New had
+            ** no label of its own.
+            */
+            if (CL_HasUntrackedRef (OldLabel)) {
+                CE_MoveLabel (OldLabel, New);
+                continue;
+            }
+
             /* Move references */
             CL_MoveRefs (OldLabel, NewLabel);
 
