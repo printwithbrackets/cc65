@@ -118,9 +118,11 @@ void CL_MoveRefs (CodeLabel* OldLabel, CodeLabel* NewLabel)
         if (E->JumpTo == OldLabel) {
             CL_AddRef (NewLabel, E);
         } else {
-            /* JumpTo == NULL: data-segment ref, not a tracked jump and will always not be an external label*/
+            /* JumpTo == NULL: data-segment ref, not a tracked jump and
+            ** will always not be an external label
+            */
             CHECK (E->JumpTo == NULL);
-            CHECK (E->ArgOff ==0);
+            CHECK (E->ArgOff == 0);
             if (CE_HasArgBase (E)) {
                 CE_SetArgBase (E, NewLabel->Name);
             } else {
